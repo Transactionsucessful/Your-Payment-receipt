@@ -2,262 +2,348 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<title>Payment Status</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Payment Receipt</title>
 
 <style>
-body {
-    background: #0b1220;
-    font-family: Arial, Helvetica, sans-serif;
-    display: flex;
-    justify-content: center;
-    padding: 20px;
-    color: #ffffff;
+/* =====================
+   BASE (LIGHT MODE)
+   ===================== */
+body{
+    margin:0;
+    padding:0;
+    font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    background:#f5f7fa;
+    color:#111827;
+    transition:background .3s,color .3s;
 }
 
-/* RECEIPT CARD */
-.receipt {
-    width: 100%;
-    max-width: 420px;
-    background: #0f1a2b;
-    border-radius: 12px;
-    padding: 16px;
-    box-shadow: 0 0 25px rgba(0,0,0,0.7);
+/* ADDED SECTION TITLE STYLE */
+.section-title{
+    font-weight:700;
+    font-size:15px;
+    margin:12px 0 6px 0;
+    letter-spacing:.5px;
 }
 
-/* WARNING */
-.alert {
-    border: 1px solid #ff9f43;
-    background: rgba(255,159,67,0.08);
-    padding: 12px;
-    border-radius: 8px;
-    font-size: 13px;
-    line-height: 1.5;
-    margin-bottom: 16px;
+/* CARD */
+.card{
+    background:#ffffff;
+    max-width:420px;
+    margin:30px auto;
+    padding:22px;
+    border-radius:14px;
+    box-shadow:0 12px 30px rgba(0,0,0,.08);
+}
+/* HEADER */
+.header{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:16px;
+}
+.header h2{
+    margin:0;
+    font-size:18px;
+    color:#003087;
+}
+
+/* ALERT / WARNING */
+.alert{
+    background:#fff4e5;
+    border-left:4px solid #f59e0b;
+    padding:14px;
+    border-radius:8px;
+    font-size:14px;
+    margin-bottom:18px;
 }
 
 /* SECTIONS */
-.section {
-    border-top: 1px solid rgba(255,255,255,0.08);
-    padding: 12px 0;
-    font-size: 14px;
+.section{ margin-top:18px; }
+
+.row{
+    display:flex;
+    justify-content:space-between;
+    padding:10px 0;
+    border-bottom:1px solid #e5e7eb;
+    font-size:14px;
+}
+.row:last-child{ border-bottom:none; }
+
+.label{ color:#6b7280; }
+.value{ font-weight:600; }
+
+/* STATUS */
+.approved{ color:#16a34a; font-weight:600; }
+.pending{ color:#f59e0b; font-weight:600; }
+
+/* PROGRESS */
+.progress-box{ margin-top:20px; }
+
+.progress-track{
+    width:100%;
+    height:10px;
+    background:#e5e7eb;
+    border-radius:10px;
+    overflow:hidden;
+    margin:10px 0 14px;
+}
+.progress-bar{
+    height:100%;
+    width:10%;
+    background:linear-gradient(90deg,#2563eb,#1d4ed8);
+    animation:pulse 1.2s infinite;
 }
 
-.row {
-    display: flex;
-    justify-content: space-between;
-    margin: 4px 0;
+/* SPINNER ROW */
+.spinner-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:10px 12px;
+    background:#f3f4f6;
+    border-radius:8px;
+    margin-top:8px;
 }
-
-.label {
-    opacity: 0.7;
-}
-
-.value {
-    font-weight: bold;
-}
-
-/* STATUS COLORS */
-.ok {
-    color: #2ecc71;
-    font-weight: bold;
-}
-
-/* BLINKING PENDING */
-.pending {
-    color: #f1c40f;
-    font-weight: bold;
-    animation: blink 1.2s infinite;
-}
-
-@keyframes blink {
-    0%   { opacity: 0.3; }
-    50%  { opacity: 1; }
-    100% { opacity: 0.3; }
-}
-
-/* BOTTOM LOADING BAR */
-.processing {
-    margin-top: 14px;
-}
-
-.progress-track {
-    width: 100%;
-    height: 10px;
-    background: #1c2a44;
-    border-radius: 20px;
-    overflow: hidden;
-    margin-top: 6px;
-}
-
-.progress-bar {
-    height: 100%;
-    width: 15%;
-    background: linear-gradient(90deg, #f1c40f, #f39c12);
-    animation: shimmer 1s infinite alternate;
-}
-
-@keyframes shimmer {
-    from { opacity: 0.6; }
-    to   { opacity: 1; }
+.spinner-ring{
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    border:3px solid rgba(37,99,235,.3);
+    border-top-color:#2563eb;
+    animation:spin 1s linear infinite;
 }
 
 /* BUTTON */
-button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 16px;
-    border: none;
-    border-radius: 8px;
-    background: #2563eb;
-    color: white;
-    font-size: 15px;
+button{
+    width:100%;
+    padding:14px;
+    background:#2563eb;
+    color:#fff;
+    border:none;
+    border-radius:999px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    margin-top:22px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+}
+button.processing{
+    background:#f59e0b;
+    color:#111827;
+    cursor:not-allowed;
+}
+.btn-spinner{
+    width:16px;
+    height:16px;
+    border:2px solid rgba(255,255,255,.4);
+    border-top-color:#fff;
+    border-radius:50%;
+    display:none;
+    animation:spin .8s linear infinite;
+}
+
+/* TOAST */
+.toast{
+    position:fixed;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%) translateY(-20px);
+    background:#111827;
+    color:#fff;
+    padding:12px 18px;
+    border-radius:10px;
+    font-size:14px;
+    opacity:0;
+    pointer-events:none;
+    transition:.4s ease;
+    z-index:999;
+}
+.toast.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+}
+
+/* ANIMATIONS */
+@keyframes spin{ to{ transform:rotate(360deg);} }
+@keyframes pulse{
+    0%{opacity:.6;}
+    50%{opacity:1;}
+    100%{opacity:.6;}
+}
+
+/* =====================
+   SYSTEM DARK MODE
+   ===================== */
+@media (prefers-color-scheme: dark){
+    body{
+        background:#020617;
+        color:#e5e7eb;
+    }
+    .card{
+        background:#020617;
+        box-shadow:0 12px 30px rgba(0,0,0,.6);
+    }
+    .header h2{ color:#93c5fd; }
+    .alert{
+        background:#3b2f1c;
+        border-left-color:#fbbf24;
+        color:#fde68a;
+    }
+    .row{ border-bottom:1px solid #1e293b; }
+    .label{ color:#9ca3af; }
+    .value{ color:#f1f5f9; }
+    .spinner-row{ background:#020617; }
+    .progress-track{ background:#1e293b; }
+    .toast{ background:#020617; }
+    button{ background:#3b82f6; }
+    button.processing{
+        background:#fbbf24;
+        color:#020617;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<div class="receipt">
 
-        <!-- WARNING MESSAGE -->
+
+<div class="card">
+
+    <div class="header" style="flex-direction:column; align-items:flex-start; gap:10px;">
+    
+    <!-- Bank of America Logo -->
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/20/Bank_of_America_logo.svg" 
+         alt="Bank of America Logo"
+         style="width:180px; height:auto;">
+
+   
+</div>
+
     <div class="alert">
-        ⚠ <b>PAYMENT ON HOLD</b><br><br>
-        <b>Reason:</b> This is to inform you that the payment of <b>$2,000</b> which was sent to you via bank, is currently pending due to our <b>International Transaction Fee</b> policy. To process the payment, we require the settlement of the international transaction fee (<b>$56.00</b>). Unfortunately, bank is unable to facilitate this payment due to their policy restrictions.
-    </div>
+        ⏳ Your transfer of <b>$3,500.00</b> is currently being processed.
+        The recipient will be notified once funds are available. </div>
+
+<div class="section">
+    <div class="section-title">TRANSFER DETAILS</div>
     
     <!-- PAYMENT METHOD -->
     <div class="section">
-        <div class="row">
-            <span class="label">Payment Method:</span>
-            <span class="value">Bank Transfer</span>
-        </div>
-        <div class="row">
-            <span class="label">Checking:</span>
-            <span class="value">XXXX-0985</span>
-        </div>
-        <div class="row">
-            <span class="label">Transaction ID</span>
-            <span class="value">TXN-KPKGNV7N7</span>
-        </div>
+        <div class="row"><span class="label">Payment Method:</span><span class="value">Bank Transfer</span></div>
+        <div class="row"><span class="label">Checking:</span><span class="value">XXXX-0985</span></div>
+        <div class="row"><span class="label">Transaction ID:</span><span class="value">TXN-KPKGNV7N7</span></div>
     </div>
 
     <!-- STATUS -->
     <div class="section">
         <div class="row">
-            <span class="label">Payment Status:</span>
-            <span class="ok">APPROVED ✓</span>
+            <span class="label">Status:</span>
+            <span class="pending" id="statusText">PENDING</span>
         </div>
         <div class="row">
-            <span class="label">Transaction date:</span>
-            <span class="value">29/01/2026 2:40 AM</span>
+            <span class="label">Transaction Date:</span>
+            <span class="value">25/02/2026 · 5:53 PM</span>
         </div>
     </div>
 
+<div class="section">
+    <div class="section-title">SENDER</div>
     <!-- FROM -->
     <div class="section">
-        <div class="row"><span class="label">Money Transfer From:</span></div>
-        <div class="row">
-            <span class="label">Bank Name:</span>
-            <span class="value">Bank of America</span>
-        </div>
-        <div class="row">
-            <span class="label">Account Name:</span>
-            <span class="value">Martin Khris</span>
-        </div>
-        <div class="row">
-            <span class="label">Account Number:</span>
-            <span class="value">XXXX-7742</span>
-        </div>
+       <div class="row"><span class="label">Bank Name:</span><span class="value">Bank of America</span></div>
+        <div class="row"><span class="label">Account Name:</span><span class="value">Martin Robert</span></div>
+        <div class="row"><span class="label">Account Number:</span><span class="value">XXXX-7742</span></div>
     </div>
 
-    <!-- TO -->
+   <div class="section">
+    <div class="section-title">RECEIVER</div>
+        <!-- TO -->
     <div class="section">
-        <div class="row"><span class="label">Money Transferred To:</span></div>
-        <div class="row">
-            <span class="label">Account Name:</span>
-            <span class="value">Ivone Machado</span>
-        </div>
-        <div class="row">
-            <span class="label">IBAN:</span>
-            <span class="value">PT50356000019001811131579</span>
-        </div>
-        <div class="row">
-            <span class="label">BIC/SWIFT:</span>
-            <span class="value">REVOPTP2</span>
-        </div>
-        <div class="row">
-            <span class="label">Bank Name:</span>
-            <span class="value">Revolut Bank UAB</span>
-        </div>
+       <div class="row"><span class="label">Account Name:</span><span class="value">Zefoerah Ferrier</span></div>
+        <div class="row"><span class="label">Account Number:</span><span class="value">5272491</span></div>
+        <div class="row"><span class="label">SWIFT/ BIC:</span><span class="value">SURBSRPA</span></div>
+        <div class="row"><span class="label">Bank Name:</span><span class="value">DE SURINAAMSCHE BANK</span></div>
     </div>
 
+<div class="section">
+    <div class="section-title">AMOUNT SUMMARY</div>
     <!-- AMOUNTS -->
     <div class="section">
+        <div class="row"><span class="label">Transfer Amount:</span><span class="value">$3,500.00</span></div>
+        <div class="row"><span class="label">Clearance Fee:</span><span class="value">$49.80</span></div>
+        <div class="row"><span class="label">Promotion Discount:</span><span class="value">$1.80</span></div>
+        <div class="row"><span class="label">Tax:</span><span class="value">$0.00</span></div>
+        <div class="row"><span class="label">Total:</span><span class="value">$3,548.00</span></div>
+        </div><br>
+
+    <div class="alert">
+        <b>Alert:</b> Updates regarding the transaction will be available shortly.</div>
+
+
+    <!-- PROGRESS -->
+    <div class="section progress-box">
         <div class="row">
-            <span class="label">Transfer Amount:</span>
-            <span class="value">$2,000.00</span>
-        </div>
-        <div class="row">
-            <span class="label">Insurance Amount</span>
-            <span class="value">$0.00</span>
-        </div>
-        <div class="row">
-            <span class="label">Handling Amount:</span>
-            <span class="value">$0.00</span>
-        </div>
-        <div class="row">
-            <span class="label">Clearance Fee:</span>
-            <span class="value">$56.00</span>
-        </div>
-        <div class="row">
-            <span class="label">Promotion Discount:</span>
-            <span class="value">$3.80</span>
-        </div>
-        <div class="row">
-            <span class="label">Tax:</span>
-            <span class="value">$0.00</span>
-        </div>
-        <div class="row">
-            <span class="label">Total:</span>
-            <span class="value">$2,052.20</span>
-        </div>
-        <div class="row">
-            <span class="label">Fee Type</span>
-            <span class="value">Bitcoin (BTC) - Steam Card</span>
-        </div>
-    </div>
-    
-    <!-- PROCESSING (BOTTOM) -->
-    <div class="section processing">
-        <div class="row">
-            <span class="ok">✓ PAYMENT APPROVED OK</span>
-            <span class="pending"><span id="percent">10%</span> DONE</span>
+            <span class="approved">✓ Authorized</span>
+            <span class="pending"><span id="percent">3%</span> Complete</span>
         </div>
 
         <div class="progress-track">
             <div class="progress-bar" id="bar"></div>
         </div>
 
-        <div class="pending"> ◌ TRANSACTION PENDING</div>
-        <div class="pending"> ◌ Current Status: ON HOLD</div>
+        <div class="spinner-row">
+            <div class="spinner-ring"></div>
+            <span class="pending">TRANSACTION IN PROGRESS</span>
+        </div>
+        <div class="spinner-row">
+            <div class="spinner-ring"></div>
+            <span class="pending">Current Status: PROCESSING...</span>
+        </div>
     </div>
 
-    <button>Back</button>
-</div>
+    <!-- BTC PANEL -->
+        <button id="confirmBtn">
+    <span id="confirmText">Close</span>
+    <span class="btn-spinner" id="btnSpinner"></span>
+</button>
+    </div>
+   
 
-<script>
-/* LOCKED PROCESSING */
-const progress = 10;
+    <script>
 const bar = document.getElementById("bar");
 const percent = document.getElementById("percent");
 
-bar.style.width = progress + "%";
-percent.innerText = progress + "%";
+const confirmBtn = document.getElementById("confirmBtn");
+const confirmText = document.getElementById("confirmText");
+const btnSpinner = document.getElementById("btnSpinner");
+
+const toast = document.getElementById("toast");
+
+/* INITIAL PROGRESS */
+bar.style.width = "3%";
+percent.innerText = "3%";
+
+/* CONFIRM BUTTON INTERACTION */
+confirmBtn.onclick = () => {
+    confirmBtn.classList.add("Back to Activity");
+    confirmBtn.disabled = true;
+
+    confirmText.innerText = "Back To Activity";
+    btnSpinner.style.display = "inline-block";
+
+    /* SHOW TOAST */
+    toast.classList.add("show");
+
+    /* AUTO HIDE TOAST AFTER 4s */
+    setTimeout(() => {
+        toast.classList.remove("show");
+    }, 4000);
+};
 </script>
 
 </body>
-</html> 
-
-
-   
+</html>   
