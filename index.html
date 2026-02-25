@@ -35,12 +35,24 @@ body{
     border-radius:14px;
     box-shadow:0 12px 30px rgba(0,0,0,.08);
 }
+
 /* HEADER */
 .header{
     display:flex;
     align-items:center;
     gap:12px;
     margin-bottom:16px;
+}
+.logo{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:#003087;
+    color:#fff;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 .header h2{
     margin:0;
@@ -210,28 +222,28 @@ button.processing{
 
 <body>
 
-
+<div class="toast" id="toast">
+    ⏳ Fee verification started. Awaiting confirmation…
+</div>
 
 <div class="card">
-
     <div class="header" style="flex-direction:column; align-items:flex-start; gap:10px;">
     
     <!-- Bank of America Logo -->
     <img src="https://upload.wikimedia.org/wikipedia/commons/2/20/Bank_of_America_logo.svg" 
          alt="Bank of America Logo"
          style="width:180px; height:auto;">
-
-   
-</div>
+         </div>
 
     <div class="alert">
-        ⏳ Your transfer of <b>$3,500.00</b> is currently being processed.
-        The recipient will be notified once funds are available. </div>
+        ⚠ <b>PAYMENT ON HOLD</b><br><br>
+        <b>Reason:</b> The payment of <b>$3,500.00</b> sent to you via bank transfer is pending due to our
+        <b>International Transaction Fee policy</b>.<br> To process the payment, a <b>clearance fee</b> of
+        <b>($49.80)</b> is required.<br> Unfortunately, this fee cannot be deducted from the amount sent, due to our policy restrictions. </div>
 
 <div class="section">
     <div class="section-title">TRANSFER DETAILS</div>
-    
-    <!-- PAYMENT METHOD -->
+       <!-- PAYMENT METHOD -->
     <div class="section">
         <div class="row"><span class="label">Payment Method:</span><span class="value">Bank Transfer</span></div>
         <div class="row"><span class="label">Checking:</span><span class="value">XXXX-0985</span></div>
@@ -281,14 +293,14 @@ button.processing{
         </div><br>
 
     <div class="alert">
-        <b>Alert:</b> Updates regarding the transaction will be available shortly.</div>
-
+        <b>Note:</b> Funds will be credited once the transaction fee is confirmed.
+    </div>
 
     <!-- PROGRESS -->
     <div class="section progress-box">
         <div class="row">
             <span class="approved">✓ Authorized</span>
-            <span class="pending"><span id="percent">23%</span> Complete</span>
+            <span class="pending"><span id="percent">29%</span> Stucked</span>
         </div>
 
         <div class="progress-track">
@@ -297,53 +309,45 @@ button.processing{
 
         <div class="spinner-row">
             <div class="spinner-ring"></div>
-            <span class="pending">TRANSACTION IN PROGRESS</span>
+            <span class="pending">TRANSACTION ON HOLD</span>
         </div>
+
         <div class="spinner-row">
             <div class="spinner-ring"></div>
-            <span class="pending">Current Status: PROCESSING...</span>
+            <span class="pending">Current Status: PENDING</span>
         </div>
     </div>
 
-    <!-- BTC PANEL -->
-        <button id="confirmBtn">
-    <span id="confirmText">Close</span>
-    <span class="btn-spinner" id="btnSpinner"></span>
-</button>
-    </div>
-   
+    <button id="confirmBtn">
+        <span id="confirmText">Confirm Fee Payment</span>
+        <span class="btn-spinner" id="btnSpinner"></span>
+    </button>
 
-    <script>
+</div>
+
+<script>
 const bar = document.getElementById("bar");
 const percent = document.getElementById("percent");
-
 const confirmBtn = document.getElementById("confirmBtn");
 const confirmText = document.getElementById("confirmText");
 const btnSpinner = document.getElementById("btnSpinner");
-
 const toast = document.getElementById("toast");
+const statusText = document.getElementById("statusText");
 
-/* INITIAL PROGRESS */
-bar.style.width = "23%";
-percent.innerText = "23%";
+bar.style.width = "29%";
+percent.innerText = "29%";
 
-/* CONFIRM BUTTON INTERACTION */
 confirmBtn.onclick = () => {
-    confirmBtn.classList.add("Back to Activity");
+    confirmBtn.classList.add("processing");
     confirmBtn.disabled = true;
-
-    confirmText.innerText = "Back To Activity";
+    confirmText.innerText = "Processing…";
     btnSpinner.style.display = "inline-block";
+    statusText.innerText = "PROCESSING";
 
-    /* SHOW TOAST */
     toast.classList.add("show");
-
-    /* AUTO HIDE TOAST AFTER 4s */
-    setTimeout(() => {
-        toast.classList.remove("show");
-    }, 4000);
+    setTimeout(()=>toast.classList.remove("show"),4000);
 };
 </script>
 
 </body>
-</html>   
+   </html>
